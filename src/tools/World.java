@@ -29,5 +29,8 @@ public abstract class World {
 		return null;
 	}
 	
+	public void checkColls(){
+		
+	}
 	
 }

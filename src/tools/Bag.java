@@ -11,7 +11,7 @@ public class Bag <Item> implements Iterable<Item> {
 	
 
 	public Bag() {
-		s = (Item[]) new Object[10];
+		s = (Item[]) new Integer[10];
 	}
 
 	public boolean isEmpty() {

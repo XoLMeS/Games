@@ -8,7 +8,7 @@ public abstract class Hero {
 
 	}
 
-	public void moveForward() {
+	public void moveForward(double steps,int dir_x,int dir_y) {
 
 	}
 

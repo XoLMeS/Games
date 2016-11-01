@@ -1,5 +1,4 @@
 package xolmes;
-
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -27,7 +26,7 @@ public class Launcher extends GraphicsProgram {
 		initMaps();
 		initGames();
 		
-		this.update(this.getGraphics());
+		//this.update(this.getGraphics());
 		play("Snake");
 		
 	}

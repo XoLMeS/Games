@@ -1,8 +1,12 @@
 package Snake;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
+import tools.Action;
+import tools.BreadthFirstPaths;
 import tools.Graph;
+import tools.LinkedQueue;
 
 public class TheSnake extends tools.Game {
 
@@ -10,47 +14,48 @@ public class TheSnake extends tools.Game {
 	private int x;
 	private int y;
 	private Color BGColor = Color.BLACK;
-
+	private tools.BreadthFirstPaths bfs;
+	private boolean botIsActive = true;
+	
 	public TheSnake(Graph g) {
 		this.x = g.X();
 		this.y = g.Y();
 		world = new World(x, y, g);
+		botIsActive = false;
 	}
 
 	@Override
 	public void play() {
 		while (true) {
 			//System.out.println("SNAKE PLAY LOOP");
-			if (frontIsClear()) {
-				world.getHero().moveForward();
-				//System.out.println("MOVED FORWARD");
+			
+			world.checkColls();
+			
+			
+			if(botIsActive){
+				bfs = new BreadthFirstPaths(world.getMap(), (int) ((int)world.getHero().getX()+world.getHero().getY()*world.getMap().X()));
+				LinkedQueue<Integer> arr = (LinkedQueue<Integer>) bfs.pathTo(world.getNerestDot());
+			        ArrayList<Integer> arr2 = new ArrayList<Integer>();
+			        for (Integer i : arr) {
+			        	if(i!=(int)world.getHero().getX()+(int)world.getHero().getY()*world.getMap().X()){
+			        		arr2.add(i);
+			        	}
+			        }
+			      
+			        world.getHero().setDirX(((arr2.get(arr2.size()-1)%world.getMap().X()) - (int)world.getHero().getX()));
+			        world.getHero().setDirY((arr2.get(arr2.size()-1) - ((int)world.getHero().getY()*world.getMap().X() + (int)world.getHero().getX()))/world.getMap().X());
+			        
 			}
+			world.moveAll();
 		}
+	}
+	
+	public void changeBotState(boolean state){
+		botIsActive = state;
 	}
 
-	private boolean frontIsClear() {
-		int arg1 = world.getHero().getDirX();
-		int arg2 = world.getHero().getDirY();
-		int x = (int) world.getHero().getX();
-		int y = (int) world.getHero().getY();
-		if (arg1 != 0 && isConnected(x + y * world.getMap().X(), x + y * world.getMap().X() + arg1)) {
-			return true;
-		}
-		if (arg2 != 0
-				&& isConnected(x + y * world.getMap().X(), x + y * world.getMap().X() + arg2 * world.getMap().X())) {
-			return true;
-		}
-		return false;
-	}
-
-	private boolean isConnected(int arg1, int arg2) {
-		for (Integer i : world.getMap().adj(arg1)) {
-			if (i == arg2) {
-				return true;
-			}
-		}
-		return false;
-	}
+	
+	
 
 	public World getWorld() {
 		return world;
