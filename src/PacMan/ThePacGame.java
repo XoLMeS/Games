@@ -1,4 +1,4 @@
-package Snake;
+package PacMan;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import tools.BreadthFirstPaths;
 import tools.Graph;
 import tools.LinkedQueue;
 
-public class TheSnake extends tools.Game {
+public class ThePacGame extends tools.Game {
 
 	private World world;
 	private int x;
@@ -17,7 +17,7 @@ public class TheSnake extends tools.Game {
 	private tools.BreadthFirstPaths bfs;
 	private boolean botIsActive = true;
 	
-	public TheSnake(Graph g) {
+	public ThePacGame(Graph g) {
 		this.x = g.X();
 		this.y = g.Y();
 		world = new World(x, y, g);

@@ -3,7 +3,6 @@ package tools;
 import java.awt.Event;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 import acm.graphics.GCompound;
 
 public abstract class World {

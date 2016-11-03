@@ -1,4 +1,4 @@
-package Snake;
+package PacMan;
 
 import java.awt.Color;
 import java.awt.Event;

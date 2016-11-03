@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Queue;
 
-import Snake.TheSnake;
+import PacMan.ThePacGame;
+import VampusTheBeast.VampusGame;
 import acm.graphics.GObject;
 import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
@@ -26,8 +27,7 @@ public class Launcher extends GraphicsProgram {
 		initMaps();
 		initGames();
 		
-		//this.update(this.getGraphics());
-		play("Snake");
+		play("Vampus");
 		
 	}
 	
@@ -44,12 +44,13 @@ public class Launcher extends GraphicsProgram {
 
 	private void initGames() {
 		games = new HashMap<String, tools.Game>();
-		games.put("Snake", new TheSnake(maps.get("Snake_map_01")));
+		games.put("PacMan", new ThePacGame(maps.get("PacMan_map_01")));
+		games.put("Vampus", new VampusGame());
 	}
 
 	private void initMaps() {
 		maps = new HashMap<String, Graph>();
-		maps.put("Snake_map_01", new Graph("labirinth_test.txt"));
+		maps.put("PacMan_map_01", new Graph("labirinth_test.txt"));
 	}
 	
 	public void addG(GObject obj){

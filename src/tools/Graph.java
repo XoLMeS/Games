@@ -10,8 +10,6 @@ public class Graph {
 	private int Y;
 	private Bag<Integer>[] adj;
 
-
-	
 	public Graph(String fileName) {
 		Scanner sc = null;
 		try {
@@ -33,6 +31,15 @@ public class Graph {
 			int v1 = sc.nextInt();
 			int v2 = sc.nextInt();
 			addEdge(v1, v2);
+		}
+	}
+
+	public Graph(int x, int y) {
+		this.X = x;
+		this.Y = y;
+		adj = (Bag<Integer>[]) new Bag[(X * Y)];
+		for (int v = 0; v < X * Y; v++) {
+			adj[v] = new Bag<Integer>();
 		}
 	}
 
@@ -63,8 +70,9 @@ public class Graph {
 	public int Y() {
 		return Y;
 	}
-	public int V(){
-		return X*Y;
+
+	public int V() {
+		return X * Y;
 	}
 
 }
