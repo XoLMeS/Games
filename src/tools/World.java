@@ -3,6 +3,10 @@ package tools;
 import java.awt.Event;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+
+import javax.swing.JButton;
+
 import acm.graphics.GCompound;
 
 public abstract class World {
@@ -30,6 +34,10 @@ public abstract class World {
 	
 	public void checkColls(){
 		
+	}
+	
+	public ArrayList<java.lang.Object> getButtons(){
+		return null;
 	}
 	
 }

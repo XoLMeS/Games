@@ -1,6 +1,9 @@
 package tools;
 
 import java.awt.Color;
+import java.util.ArrayList;
+
+import javax.swing.JButton;
 
 public abstract class Game {
 
@@ -21,6 +24,10 @@ public abstract class Game {
 	}
 	
 	public Color getBGColor(){
+		return null;
+	}
+	
+	public ArrayList<java.lang.Object> getButtons(){
 		return null;
 	}
 

@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Queue;
 
+import javax.swing.JButton;
+import javax.swing.JTextField;
+
 import PacMan.ThePacGame;
 import VampusTheBeast.VampusGame;
 import acm.graphics.GObject;
@@ -38,7 +41,22 @@ public class Launcher extends GraphicsProgram {
 		WIDTH = game.getWorld().BLOCK_SIZE * game.getX();
 		HEIGHT = game.getWorld().BLOCK_SIZE * game.getY();
 		setBackground(game.getBGColor());
-		resize(WIDTH, HEIGHT+50);
+		resize(WIDTH, HEIGHT+50);;
+		ArrayList<Object> buttons = game.getButtons();
+		//System.out.println(buttons);
+		for(Object o:buttons){
+			//System.out.println("fds" + b);
+			
+			if(o.getClass().getName().equals(JButton.class.getName())){
+				JButton b = (JButton) o;
+				add(b,EAST);
+			}
+			if(o.getClass().getName().equals(JTextField.class.getName())){
+				JTextField b = (JTextField) o;
+				add(b,EAST);
+			}
+			
+		}
 		game.play();
 	}
 
