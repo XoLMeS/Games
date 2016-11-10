@@ -1,4 +1,5 @@
 package xolmes;
+
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -24,38 +25,38 @@ public class Launcher extends GraphicsProgram {
 	private HashMap<String, Graph> maps;
 	private HashMap<String, tools.Game> games;
 	private Game game;
-	
-	
+
 	public void run() {
 		initMaps();
+		
 		initGames();
-		
-		play("Vampus");
-		
-	}
 	
-	private void play(String game_name){
+	
+		play("PacMan");
+
+	}
+
+	private void play(String game_name) {
 		game = games.get(game_name);
 		add(game.getWorld().getGWorld());
 		this.getGCanvas().addKeyListener(game.getWorld().keybinding());
 		WIDTH = game.getWorld().BLOCK_SIZE * game.getX();
 		HEIGHT = game.getWorld().BLOCK_SIZE * game.getY();
 		setBackground(game.getBGColor());
-		resize(WIDTH, HEIGHT+50);;
+		resize(WIDTH, HEIGHT + 50);
 		ArrayList<Object> buttons = game.getButtons();
-		//System.out.println(buttons);
-		for(Object o:buttons){
-			//System.out.println("fds" + b);
-			
-			if(o.getClass().getName().equals(JButton.class.getName())){
-				JButton b = (JButton) o;
-				add(b,EAST);
+		if (buttons != null) {
+			for (Object o : buttons) {
+				
+				if (o.getClass().getName().equals(JButton.class.getName())) {
+					JButton b = (JButton) o;
+					add(b, EAST);
+				}
+				if (o.getClass().getName().equals(JTextField.class.getName())) {
+					JTextField b = (JTextField) o;
+					add(b, EAST);
+				}
 			}
-			if(o.getClass().getName().equals(JTextField.class.getName())){
-				JTextField b = (JTextField) o;
-				add(b,EAST);
-			}
-			
 		}
 		game.play();
 	}
@@ -70,8 +71,8 @@ public class Launcher extends GraphicsProgram {
 		maps = new HashMap<String, Graph>();
 		maps.put("PacMan_map_01", new Graph("labirinth_test.txt"));
 	}
-	
-	public void addG(GObject obj){
+
+	public void addG(GObject obj) {
 		add(obj);
 	}
 }

@@ -58,6 +58,15 @@ public class Graph {
 			degree++;
 		return degree;
 	}
+	
+	public boolean isConnected(int v, int w){
+		for(Integer i: adj[v]){
+			if(i==w){
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public Iterable<Integer> adj(int v) {
 		return adj[v];

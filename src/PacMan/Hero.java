@@ -111,7 +111,7 @@ public class Hero extends tools.Hero {
 	}
 
 	public void moveForward(double steps, int dir_x, int dir_y) {
-		obj.move((dir_x) / (double) steps * World.BLOCK_SIZE, (dir_y) / (double) steps * World.BLOCK_SIZE);
+		obj.move((dir_x) / (double) steps * World.BLOCK_SIZE, ((dir_y) / (double) steps) * World.BLOCK_SIZE);
 		animate(curr_x, curr_y, curr_x+dir_x, curr_y+dir_y, 10);
 	}
 

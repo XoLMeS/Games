@@ -40,7 +40,7 @@ public class World extends tools.World {
 	public World(int x, int y) {
 		this.x = x;
 		this.y = y;
-		BLOCK_SIZE = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / y) - 20;
+		//BLOCK_SIZE = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight()- 220) / y ;
 		create();
 	}
 
@@ -49,7 +49,7 @@ public class World extends tools.World {
 		fog = new GCompound();
 		fog_of_war = new ArrayList<GImage>();
 		GenerateMap(x, y, 1, x * y - 1, 1, 0, y - 1);
-
+		
 		drawWorld();
 		addMenu();
 	}
@@ -116,7 +116,7 @@ public class World extends tools.World {
 	private void GenerateMap(int x, int y, int vampus_num, int max_pit_num, int gold_num, int hero_x, int hero_y) {
 		this.x = x;
 		this.y = y;
-		BLOCK_SIZE = (int) ((Toolkit.getDefaultToolkit().getScreenSize().height - 150) / y);
+		//BLOCK_SIZE = (int) ((Toolkit.getDefaultToolkit().getScreenSize().height - 150) / y);
 
 		fog.removeAll();
 		fog_of_war.removeAll(fog_of_war);

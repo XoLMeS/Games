@@ -24,6 +24,7 @@ public class Ghost extends tools.Object {
 		this.y = y;
 		obj = new GImage("Ghost1.gif", World.BLOCK_SIZE * x + World.BLOCK_SIZE / 10,
 				World.BLOCK_SIZE * y + World.BLOCK_SIZE / 10);
+		obj.scale((double)World.BLOCK_SIZE/150);
 
 		this.a = a;
 	}
@@ -72,6 +73,11 @@ public class Ghost extends tools.Object {
 
 	public void move() {
 		move(next_x, next_y);
+	}
+	
+	public void moveTo(double d, double e){
+		this.x += d;
+		this.y += e;
 	}
 
 	public int nextStep(Graph map, int hero_loc) {

@@ -25,7 +25,7 @@ public class World extends tools.World {
 	private GLabel score_l;
 	private int score = 0;
 	private final int num_of_dots = 200;
-	private final int num_of_ghosts = 2;
+	private final int num_of_ghosts = 1;
 	private ArrayList<Dot> dots = new ArrayList<Dot>();
 	private ArrayList<Ghost> ghosts = new ArrayList<Ghost>();
 	
@@ -35,7 +35,8 @@ public class World extends tools.World {
 
 	public World(int x, int y, Graph g) {
 		map = g;
-		BLOCK_SIZE = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / y) - 20;
+		BLOCK_SIZE = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight()- 220) / y ;
+	
 		create();
 	}
 
@@ -153,7 +154,7 @@ public class World extends tools.World {
 
 			}
 		}));
-		
+		/*
 		ghosts.add(new Ghost(8, 7, new Action() {
 
 			@Override
@@ -162,20 +163,22 @@ public class World extends tools.World {
 
 			}
 		}));
-
+		 */
 		for (Ghost g : ghosts) {
 			world.add(g.getGObject());
 		}
 	}
 
-	public void moveAll() {
+	public void moveAll(int next_step_ba, boolean baIsActive) {
 		boolean moved = false;
 		int steps = 10;
 
-
 		int next_block_ghosts[] = new int[num_of_ghosts];
 		for (int i = 0; i < ghosts.size(); i++) {
-			next_block_ghosts[i] = ghosts.get(i).nextStep(map, (int) (hero.getX() + map.X() * hero.getY()));
+			//next_block_ghosts[i] = ghosts.get(i).nextStep(map, (int) (hero.getX() + map.X() * hero.getY()));
+			if(baIsActive){
+				next_block_ghosts[i] = next_step_ba;
+			}
 		}
 		if (frontIsClear()) {
 			hero.move(hero.getX() +  hero.getDirX(), hero.getY() +   hero.getDirY());
@@ -183,6 +186,8 @@ public class World extends tools.World {
 		}
 		int buf_hero_dir_x = hero.getDirX();
 		int buf_hero_dir_y = hero.getDirY();
+		double ghost_delta_x = 0;
+		double ghost_delta_y = 0;
 		for (int i = 0; i < steps; i++) {
 			long time = System.currentTimeMillis();
 			while (System.currentTimeMillis() - time <= 150/GAME_SPEED) {
@@ -191,16 +196,30 @@ public class World extends tools.World {
 			if (moved) {
 				hero.moveForward(10,buf_hero_dir_x,buf_hero_dir_y);
 			}
+			
 			for (int k = 0; k < ghosts.size(); k++) {
-				double ghost_delta_x = (((double) (next_block_ghosts[k] % map.X())) - (double) ghosts.get(k).getX())
-						/ 10;
-				double ghost_delta_y = ((double) (next_block_ghosts[k] / map.X()) - (double) ghosts.get(k).getY()) / 10;
+			
+				int curr = ghosts.get(k).getX()+ghosts.get(k).getY()*map.X();
+				if(curr + 1 ==next_block_ghosts[k]){
+					ghost_delta_x = 0.1;
+				}
+				else if(curr - 1 ==next_block_ghosts[k]){
+					ghost_delta_x = -0.1;
+				}
+				if(curr+map.X() == next_block_ghosts[k]){
+					ghost_delta_y = 0.1;
+				}
+				else if(curr-map.X() == next_block_ghosts[k]){
+					ghost_delta_y = -0.1;
+				}
+				//System.out.println("delta " + ghost_delta_x + " " + ghost_delta_y + " " + curr);
 				ghosts.get(k).getGObject().move(ghost_delta_x * World.BLOCK_SIZE, ghost_delta_y * World.BLOCK_SIZE);
+				
 			}
 		}
 
 		for (int i = 0; i < ghosts.size(); i++) {
-			ghosts.get(i).move();
+			ghosts.get(i).moveTo(ghost_delta_x*10,ghost_delta_y*10);
 		}
 		
 		
