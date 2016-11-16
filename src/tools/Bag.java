@@ -45,7 +45,7 @@ public class Bag <Item> implements Iterable<Item> {
 
 
 	private void resize(int capacity) {
-		Item[] copy = (Item[]) new Object[capacity];
+		Item[] copy = (Item[]) new Integer[capacity];
 		for (int i = 0; i < n; i++) {
 			copy[i] = s[i];
 		}

@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 
 import tools.Action;
 import tools.Graph;
+import VampusTheBeast.Solving.Location;
 import acm.graphics.GCompound;
 import acm.graphics.GImage;
 import acm.graphics.GLine;
@@ -36,11 +37,11 @@ public class World extends tools.World {
 	private int menu_x = 5;
 	private GCompound panel;
 	private ArrayList<Object> jObjects;
-
+	public boolean pause = false;
 	public World(int x, int y) {
 		this.x = x;
 		this.y = y;
-		//BLOCK_SIZE = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight()- 220) / y ;
+		BLOCK_SIZE = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight()- 220) / y ;
 		create();
 	}
 
@@ -52,6 +53,10 @@ public class World extends tools.World {
 		
 		drawWorld();
 		addMenu();
+	}
+	
+	public ArrayList<tools.Object> getObjescts(){
+		return objects;
 	}
 
 	private void addMenu() {
@@ -116,7 +121,7 @@ public class World extends tools.World {
 	private void GenerateMap(int x, int y, int vampus_num, int max_pit_num, int gold_num, int hero_x, int hero_y) {
 		this.x = x;
 		this.y = y;
-		//BLOCK_SIZE = (int) ((Toolkit.getDefaultToolkit().getScreenSize().height - 150) / y);
+		BLOCK_SIZE = (int) ((Toolkit.getDefaultToolkit().getScreenSize().height - 150) / y);
 
 		fog.removeAll();
 		fog_of_war.removeAll(fog_of_war);
@@ -159,7 +164,7 @@ public class World extends tools.World {
 				}
 			}
 		}
-		generateObject(Beast.class.getName(), gold_num, new Action() {
+		generateObject(Beast.class.getName(), vampus_num, new Action() {
 
 			@Override
 			public void perfom() {
@@ -167,7 +172,7 @@ public class World extends tools.World {
 
 			}
 		});
-		generateObject(Gold.class.getName(), vampus_num, new Action() {
+		generateObject(Gold.class.getName(), gold_num, new Action() {
 
 			@Override
 			public void perfom() {
@@ -282,6 +287,10 @@ public class World extends tools.World {
 						hero.setDirY(0);
 					}
 				}
+				
+				if (e.getKeyChar() == 32) {
+					pause = !pause;
+				}
 
 				if (hero.getX() + hero.getDirX() >= 0 && hero.getX() + hero.getDirX() < map.X()
 						&& hero.getY() + hero.getDirY() >= 0 && hero.getY() + hero.getDirY() < map.Y()) {
@@ -299,6 +308,14 @@ public class World extends tools.World {
 		return kl;
 	}
 
+	public void perfomMoveAction(Location l){
+		
+		hero.setDirX(l.getX()-hero.getX());
+		hero.setDirY(l.getY()-hero.getY());
+		
+			hero.move(0, 0);
+			fog.remove(fog_of_war.get(hero.getY() * map.X() + hero.getX()));
+	}
 	public Graph getMap() {
 		return map;
 	}

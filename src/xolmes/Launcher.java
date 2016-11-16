@@ -32,7 +32,7 @@ public class Launcher extends GraphicsProgram {
 		initGames();
 	
 	
-		play("PacMan");
+		play("Vampus");
 
 	}
 
