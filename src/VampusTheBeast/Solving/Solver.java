@@ -39,17 +39,18 @@ public class Solver {
 	ArrayList<Integer> connected_rooms;
 
 	// Worth of predicats
-	int mB = -4;
+	int mB = -6;
 	int mP = -5;
 	int nB = 4;
 	int nP = 5;
 	int clear = 10;
-	int b = -10;
+	int b = -16;
 	int p = -15;
 
 	// Some optimizetion. Bot can build his path once then he just pops from
 	// array next step. It prevents using bfs in every call of nextStep()
 	ArrayList<Integer> path;
+	
 
 	public Solver(Location hero, ArrayList<Location> beasts,
 			ArrayList<Location> pits, Graph map) {
@@ -75,7 +76,7 @@ public class Solver {
 		discovered = new Graph(map.X(), map.Y());
 	
 		connected_rooms.add(hero_pos);
-		if (hero.getX() > 1) {
+		if (hero.getX() >= 1) {
 			discovered.addEdge(hero_pos, hero_pos - 1);
 			connected_rooms.add(hero_pos - 1);
 		}
@@ -87,7 +88,7 @@ public class Solver {
 			discovered.addEdge(hero_pos, hero_pos + map.X());
 			connected_rooms.add(hero_pos + map.X());
 		}
-		if (hero.getY() > 1) {
+		if (hero.getY() >= 1) {
 			discovered.addEdge(hero_pos, hero_pos - map.X());
 			connected_rooms.add(hero_pos - map.X());
 		}
@@ -100,7 +101,7 @@ public class Solver {
 		int best_worth = -999;
 		int next_room = -1;
 		for(Integer i:connected_rooms){
-			System.out.println(i);
+			//System.out.println(i);
 		}
 		for (int i = 0; i < connected_rooms.size(); i++) {
 		
@@ -140,7 +141,7 @@ public class Solver {
 					best_worth = worth;
 					next_room = connected_rooms.get(i);
 				}
-				System.out.println("room " + connected_rooms.get(i) + " worth " + worth );
+				//System.out.println("room " + connected_rooms.get(i) + " worth " + worth );
 			}
 			
 		}
@@ -148,14 +149,16 @@ public class Solver {
 			bfs = new BreadthFirstPaths(discovered, hero.getX() + hero.getY()
 					* map.X());
 			//System.out.println(next_room);
+			
 			tools.LinkedQueue<Integer> arr = (tools.LinkedQueue<Integer>) bfs
 					.pathTo(next_room);
+			
 			for (Integer i : arr) {
 				path.add(i);
 			}
 			
 		} 
-		System.out.println("Choosed " + next_room + " worth " + best_worth + " " + path.get(path.size()-1));
+		//System.out.println("Choosed " + next_room + " worth " + best_worth + " " + path.get(path.size()-1));
 		if(path.get(path.size()-1)==hero.getX() + hero.getY() * map.X()){
 			path.remove(path.size()-1);
 		}
@@ -167,7 +170,7 @@ public class Solver {
 		knowledge.get(path.get(path.size()-1)).remove(Predicats.UNK);
 		path.remove(path.size()-1);
 		sense();
-		System.out.println("********************************");
+		//System.out.println("********************************");
 
 		return toReturn;
 	}
@@ -177,7 +180,7 @@ public class Solver {
 		if(!connected_rooms.contains(hero_pos)){
 			connected_rooms.add(hero_pos);
 		}
-		if (hero.getX() > 1) {
+		if (hero.getX() >= 1) {
 			discovered.addEdge(hero_pos, hero_pos - 1);
 			if(!connected_rooms.contains(hero_pos - 1)){
 				connected_rooms.add(hero_pos - 1);
@@ -196,7 +199,7 @@ public class Solver {
 				connected_rooms.add(hero_pos + map.X());
 			}
 		}
-		if (hero.getY() > 1) {
+		if (hero.getY() >= 1) {
 			discovered.addEdge(hero_pos, hero_pos - map.X());
 			if(!connected_rooms.contains(hero_pos - map.X())){
 				connected_rooms.add(hero_pos - map.X());

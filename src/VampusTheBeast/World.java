@@ -38,10 +38,13 @@ public class World extends tools.World {
 	private GCompound panel;
 	private ArrayList<Object> jObjects;
 	public boolean pause = false;
+
 	public World(int x, int y) {
 		this.x = x;
 		this.y = y;
-		BLOCK_SIZE = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight()- 220) / y ;
+		BLOCK_SIZE = (int) (Toolkit.getDefaultToolkit().getScreenSize()
+				.getHeight() - 220)
+				/ y;
 		create();
 	}
 
@@ -50,12 +53,12 @@ public class World extends tools.World {
 		fog = new GCompound();
 		fog_of_war = new ArrayList<GImage>();
 		GenerateMap(x, y, 1, x * y - 1, 1, 0, y - 1);
-		
+
 		drawWorld();
 		addMenu();
 	}
-	
-	public ArrayList<tools.Object> getObjescts(){
+
+	public ArrayList<tools.Object> getObjescts() {
 		return objects;
 	}
 
@@ -66,7 +69,8 @@ public class World extends tools.World {
 		world.add(panel, x * World.BLOCK_SIZE + 50, 10);
 
 		// ADD BackGround
-		GRect bg = new GRect(menu_x * World.BLOCK_SIZE - 100, y * World.BLOCK_SIZE - 20);
+		GRect bg = new GRect(menu_x * World.BLOCK_SIZE - 100, y
+				* World.BLOCK_SIZE - 20);
 		bg.setFilled(true);
 		bg.setFillColor(Color.GRAY);
 		bg.setColor(border_color);
@@ -74,43 +78,7 @@ public class World extends tools.World {
 
 		jObjects = new ArrayList<Object>();
 
-		final JTextField x_field = new JTextField();
-		x_field.setVisible(true);
-		x_field.setSize(100, 50);
-		x_field.setText("X");
-		jObjects.add(x_field);
-
-		final JTextField y_field = new JTextField();
-		y_field.setVisible(true);
-		y_field.setSize(100, 50);
-		y_field.setText("Y");
-		jObjects.add(y_field);
-
-		final JTextField beasts_num_field = new JTextField();
-		beasts_num_field.setVisible(true);
-		beasts_num_field.setSize(100, 50);
-		beasts_num_field.setText("beasts_num");
-		jObjects.add(beasts_num_field);
-
-		// Add button GENERATE
-		JButton generate = new JButton("Generate");
-		generate.setVisible(true);
-		generate.setSize(100, 50);
-		generate.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				world.removeAll();
-				int new_x = Integer.valueOf(x_field.getText());
-				int new_y = Integer.valueOf(y_field.getText());
-				int beasts_num = Integer.valueOf(beasts_num_field.getText());
-				GenerateMap(new_x, new_y, beasts_num, new_x * new_y - 1, 1, 0, new_y - 1);
-				drawWorld();
-
-			}
-		});
-		jObjects.add(generate);
-
+		
 	}
 
 	public ArrayList<Object> getButtons() {
@@ -118,7 +86,8 @@ public class World extends tools.World {
 		return jObjects;
 	}
 
-	private void GenerateMap(int x, int y, int vampus_num, int max_pit_num, int gold_num, int hero_x, int hero_y) {
+	public void GenerateMap(int x, int y, int vampus_num, int max_pit_num,
+			int gold_num, int hero_x, int hero_y) {
 		this.x = x;
 		this.y = y;
 		BLOCK_SIZE = (int) ((Toolkit.getDefaultToolkit().getScreenSize().height - 150) / y);
@@ -128,8 +97,10 @@ public class World extends tools.World {
 
 		for (int i = 0; i < this.x; i++) {
 			for (int j = 0; j < this.y; j++) {
-				GImage fog_texture = new GImage("fog.jpg", j * BLOCK_SIZE, i * BLOCK_SIZE);
-				fog_texture.scale(((double) World.BLOCK_SIZE) / 790, ((double) World.BLOCK_SIZE) / 600);
+				GImage fog_texture = new GImage("fog.jpg", j * BLOCK_SIZE, i
+						* BLOCK_SIZE);
+				fog_texture.scale(((double) World.BLOCK_SIZE) / 790,
+						((double) World.BLOCK_SIZE) / 600);
 				fog_of_war.add(fog_texture);
 				fog.add(fog_texture);
 
@@ -168,7 +139,7 @@ public class World extends tools.World {
 
 			@Override
 			public void perfom() {
-				// TODO Auto-generated method stub
+				endGame(false);
 
 			}
 		});
@@ -176,26 +147,53 @@ public class World extends tools.World {
 
 			@Override
 			public void perfom() {
-				// TODO Auto-generated method stub
-
+				endGame(true);
 			}
 		});
 		Random r = new Random();
-		for(int i= 0; i < map.X(); i++){
-			for(int j = 0; j < map.Y(); j++){
-				if(i!=hero.getDirY() && j!=hero.getX()){
-				int rand = r.nextInt(6);
-				if(rand == 0){
-					objects.add(new Pit(j,i,new Action() {
-						
-						@Override
-						public void perfom() {
-							// TODO Auto-generated method stub
-							
+		for (int i = 0; i < map.X(); i++) {
+			for (int j = 0; j < map.Y(); j++) {
+				if (i != hero.getDirY() && j != hero.getX()) {
+					int rand = r.nextInt(20);
+					if (rand == 0) {
+						objects.add(new Pit(j, i, new Action() {
+
+							@Override
+							public void perfom() {
+								endGame(false);
+							}
+						}));
+						GImage near;
+						if (j < map.X() - 1) {
+							near = new GImage("wind.png", World.BLOCK_SIZE
+									* (j + 1), World.BLOCK_SIZE * i);
+							near.scale(((double) World.BLOCK_SIZE) / 250);
+							world.add(near);
+							near.sendToBack();
 						}
-					}));
+						if (j > 0) {
+							near = new GImage("wind.png", World.BLOCK_SIZE
+									* (j - 1), World.BLOCK_SIZE * i);
+							near.scale(((double) World.BLOCK_SIZE) / 250);
+							world.add(near);
+							near.sendToBack();
+						}
+						if (i < map.Y() - 1) {
+							near = new GImage("wind.png", World.BLOCK_SIZE
+									* (j), World.BLOCK_SIZE * (i + 1));
+							near.scale(((double) World.BLOCK_SIZE) / 250);
+							world.add(near);
+							near.sendToBack();
+						}
+						if (i  > 0) {
+							near = new GImage("wind.png", World.BLOCK_SIZE
+									* (j), World.BLOCK_SIZE * (i - 1));
+							near.scale(((double) World.BLOCK_SIZE) / 250);
+							world.add(near);
+							near.sendToBack();
+						}
+					}
 				}
-			}
 			}
 		}
 		for (tools.Object o : objects) {
@@ -232,12 +230,43 @@ public class World extends tools.World {
 				if (!found) {
 					if (class_name.equals(Beast.class.getName())) {
 						objects.add(new Beast(vam_x, vam_y, a));
+						GImage near;
+						if (vam_x < map.X() - 1) {
+							near = new GImage("song.png", World.BLOCK_SIZE
+									* (vam_x + 1), World.BLOCK_SIZE * vam_y);
+							near.scale(((double) World.BLOCK_SIZE) / 450);
+							world.add(near);
+							near.sendToBack();
+						}
+						if (vam_x > 0) {
+							near = new GImage("song.png", World.BLOCK_SIZE
+									* (vam_x - 1), World.BLOCK_SIZE * vam_y);
+							near.scale(((double) World.BLOCK_SIZE) / 450);
+							world.add(near);
+							near.sendToBack();
+						}
+						if (vam_y < map.Y() - 1) {
+							near = new GImage("song.png", World.BLOCK_SIZE
+									* (vam_x), World.BLOCK_SIZE * (vam_y + 1));
+							near.scale(((double) World.BLOCK_SIZE) / 450);
+							world.add(near);
+							near.sendToBack();
+						}
+						if (vam_y > 0) {
+							near = new GImage("song.png", World.BLOCK_SIZE
+									* (vam_x), World.BLOCK_SIZE * (vam_y - 1));
+							near.scale(((double) World.BLOCK_SIZE) / 450);
+							world.add(near);
+							near.sendToBack();
+						}
 					}
 					if (class_name.equals(Gold.class.getName())) {
 						objects.add(new Gold(vam_x, vam_y, a));
 					}
 					if (class_name.equals(Pit.class.getName())) {
 						objects.add(new Pit(vam_x, vam_y, a));
+						System.out.println("sadasdasdasd");
+
 					}
 					break;
 				}
@@ -287,15 +316,18 @@ public class World extends tools.World {
 						hero.setDirY(0);
 					}
 				}
-				
+
 				if (e.getKeyChar() == 32) {
 					pause = !pause;
 				}
 
-				if (hero.getX() + hero.getDirX() >= 0 && hero.getX() + hero.getDirX() < map.X()
-						&& hero.getY() + hero.getDirY() >= 0 && hero.getY() + hero.getDirY() < map.Y()) {
+				if (hero.getX() + hero.getDirX() >= 0
+						&& hero.getX() + hero.getDirX() < map.X()
+						&& hero.getY() + hero.getDirY() >= 0
+						&& hero.getY() + hero.getDirY() < map.Y()) {
 					hero.move(0, 0);
-					fog.remove(fog_of_war.get(hero.getY() * map.X() + hero.getX()));
+					fog.remove(fog_of_war.get(hero.getY() * map.X()
+							+ hero.getX()));
 				}
 			}
 
@@ -308,20 +340,34 @@ public class World extends tools.World {
 		return kl;
 	}
 
-	public void perfomMoveAction(Location l){
-		
-		hero.setDirX(l.getX()-hero.getX());
-		hero.setDirY(l.getY()-hero.getY());
-		
-			hero.move(0, 0);
-			fog.remove(fog_of_war.get(hero.getY() * map.X() + hero.getX()));
+	public void perfomMoveAction(Location l) {
+
+		hero.setDirX(l.getX() - hero.getX());
+		hero.setDirY(l.getY() - hero.getY());
+
+		hero.move(0, 0);
+		fog.remove(fog_of_war.get(hero.getY() * map.X() + hero.getX()));
 	}
+
 	public Graph getMap() {
 		return map;
 	}
 
 	public void checkColls() {
+		for (tools.Object o : objects) {
+			if (o.getX() == hero.getX() && o.getY() == hero.getY()) {
+				o.action();
+			}
+		}
+	}
 
+	private void endGame(boolean win) {
+		pause = true;
+		if (win) {
+
+		} else {
+
+		}
 	}
 
 	public void drawWorld() {
@@ -360,31 +406,40 @@ public class World extends tools.World {
 				// world.add(createBlock2(i % map.X(), i / map.X(), top, right,
 				// bottom, left, true));
 			} else {
-				world.add(createBlock3(i % map.X(), i / map.X(), top, right, bottom, left, true));
+				world.add(createBlock3(i % map.X(), i / map.X(), top, right,
+						bottom, left, true));
 			}
 		}
 	}
 
-	public GCompound createBlock3(int x, int y, boolean top, boolean right, boolean bottom, boolean left,
-			boolean border) {
+	public GCompound createBlock3(int x, int y, boolean top, boolean right,
+			boolean bottom, boolean left, boolean border) {
 		GCompound block = new GCompound();
 		double k2 = 0.2;
 		// BORDER
 		if (border) {
-			GLine border_01 = new GLine(x * World.BLOCK_SIZE, y * World.BLOCK_SIZE,
-					x * World.BLOCK_SIZE + World.BLOCK_SIZE, y * World.BLOCK_SIZE);
+			GLine border_01 = new GLine(x * World.BLOCK_SIZE, y
+					* World.BLOCK_SIZE,
+					x * World.BLOCK_SIZE + World.BLOCK_SIZE, y
+							* World.BLOCK_SIZE);
 			border_01.setColor(border_color);
 			block.add(border_01);
-			GLine border_02 = new GLine(x * World.BLOCK_SIZE + World.BLOCK_SIZE, y * World.BLOCK_SIZE,
-					x * World.BLOCK_SIZE + World.BLOCK_SIZE, y * World.BLOCK_SIZE + World.BLOCK_SIZE);
+			GLine border_02 = new GLine(
+					x * World.BLOCK_SIZE + World.BLOCK_SIZE, y
+							* World.BLOCK_SIZE, x * World.BLOCK_SIZE
+							+ World.BLOCK_SIZE, y * World.BLOCK_SIZE
+							+ World.BLOCK_SIZE);
 			border_02.setColor(border_color);
 			block.add(border_02);
-			GLine border_03 = new GLine(x * World.BLOCK_SIZE + World.BLOCK_SIZE,
-					y * World.BLOCK_SIZE + World.BLOCK_SIZE, x * World.BLOCK_SIZE,
-					y * World.BLOCK_SIZE + World.BLOCK_SIZE);
+			GLine border_03 = new GLine(
+					x * World.BLOCK_SIZE + World.BLOCK_SIZE, y
+							* World.BLOCK_SIZE + World.BLOCK_SIZE, x
+							* World.BLOCK_SIZE, y * World.BLOCK_SIZE
+							+ World.BLOCK_SIZE);
 			border_03.setColor(border_color);
 			block.add(border_03);
-			GLine border_04 = new GLine(x * World.BLOCK_SIZE, y * World.BLOCK_SIZE + World.BLOCK_SIZE,
+			GLine border_04 = new GLine(x * World.BLOCK_SIZE, y
+					* World.BLOCK_SIZE + World.BLOCK_SIZE,
 					x * World.BLOCK_SIZE, y * World.BLOCK_SIZE);
 			border_04.setColor(border_color);
 			block.add(border_04);
@@ -392,74 +447,91 @@ public class World extends tools.World {
 
 		// TOP
 		if (!top) {
-			GLine line_09 = new GLine(x * World.BLOCK_SIZE, y * World.BLOCK_SIZE,
-					x * World.BLOCK_SIZE + World.BLOCK_SIZE, y * World.BLOCK_SIZE);
+			GLine line_09 = new GLine(x * World.BLOCK_SIZE, y
+					* World.BLOCK_SIZE,
+					x * World.BLOCK_SIZE + World.BLOCK_SIZE, y
+							* World.BLOCK_SIZE);
 			line_09.setColor(line_color);
 			block.add(line_09);
 		}
 
-		GLine line_03 = new GLine(x * World.BLOCK_SIZE + World.BLOCK_SIZE * k2, y * World.BLOCK_SIZE,
-				x * World.BLOCK_SIZE + World.BLOCK_SIZE * k2, y * World.BLOCK_SIZE + World.BLOCK_SIZE * k2);
+		GLine line_03 = new GLine(x * World.BLOCK_SIZE + World.BLOCK_SIZE * k2,
+				y * World.BLOCK_SIZE, x * World.BLOCK_SIZE + World.BLOCK_SIZE
+						* k2, y * World.BLOCK_SIZE + World.BLOCK_SIZE * k2);
 		line_03.setColor(line_color);
 		block.add(line_03);
-		GLine line_04 = new GLine(x * World.BLOCK_SIZE + World.BLOCK_SIZE - World.BLOCK_SIZE * k2, y * World.BLOCK_SIZE,
-				x * World.BLOCK_SIZE + World.BLOCK_SIZE - World.BLOCK_SIZE * k2,
+		GLine line_04 = new GLine(x * World.BLOCK_SIZE + World.BLOCK_SIZE
+				- World.BLOCK_SIZE * k2, y * World.BLOCK_SIZE, x
+				* World.BLOCK_SIZE + World.BLOCK_SIZE - World.BLOCK_SIZE * k2,
 				y * World.BLOCK_SIZE + World.BLOCK_SIZE * k2);
 		line_04.setColor(line_color);
 		block.add(line_04);
 
 		// RIGHT
 		if (!right) {
-			GLine line_12 = new GLine(x * World.BLOCK_SIZE + World.BLOCK_SIZE, y * World.BLOCK_SIZE,
-					x * World.BLOCK_SIZE + World.BLOCK_SIZE, y * World.BLOCK_SIZE + World.BLOCK_SIZE);
+			GLine line_12 = new GLine(x * World.BLOCK_SIZE + World.BLOCK_SIZE,
+					y * World.BLOCK_SIZE, x * World.BLOCK_SIZE
+							+ World.BLOCK_SIZE, y * World.BLOCK_SIZE
+							+ World.BLOCK_SIZE);
 			line_12.setColor(line_color);
 			block.add(line_12);
 		}
-		GLine line_05 = new GLine(x * World.BLOCK_SIZE + World.BLOCK_SIZE - World.BLOCK_SIZE * k2,
-				y * World.BLOCK_SIZE + World.BLOCK_SIZE * k2, x * World.BLOCK_SIZE + World.BLOCK_SIZE,
-				y * World.BLOCK_SIZE + World.BLOCK_SIZE * k2);
+		GLine line_05 = new GLine(x * World.BLOCK_SIZE + World.BLOCK_SIZE
+				- World.BLOCK_SIZE * k2, y * World.BLOCK_SIZE
+				+ World.BLOCK_SIZE * k2, x * World.BLOCK_SIZE
+				+ World.BLOCK_SIZE, y * World.BLOCK_SIZE + World.BLOCK_SIZE
+				* k2);
 		line_05.setColor(line_color);
 		block.add(line_05);
-		GLine line_06 = new GLine(x * World.BLOCK_SIZE + World.BLOCK_SIZE - World.BLOCK_SIZE * k2,
-				y * World.BLOCK_SIZE + World.BLOCK_SIZE - World.BLOCK_SIZE * k2,
-				x * World.BLOCK_SIZE + World.BLOCK_SIZE,
-				y * World.BLOCK_SIZE + World.BLOCK_SIZE - World.BLOCK_SIZE * k2);
+		GLine line_06 = new GLine(x * World.BLOCK_SIZE + World.BLOCK_SIZE
+				- World.BLOCK_SIZE * k2, y * World.BLOCK_SIZE
+				+ World.BLOCK_SIZE - World.BLOCK_SIZE * k2, x
+				* World.BLOCK_SIZE + World.BLOCK_SIZE, y * World.BLOCK_SIZE
+				+ World.BLOCK_SIZE - World.BLOCK_SIZE * k2);
 		line_06.setColor(line_color);
 		block.add(line_06);
 
 		// BOTTOM
 		if (!bottom) {
-			GLine line_10 = new GLine(x * World.BLOCK_SIZE, y * World.BLOCK_SIZE + World.BLOCK_SIZE,
-					x * World.BLOCK_SIZE + World.BLOCK_SIZE, y * World.BLOCK_SIZE + World.BLOCK_SIZE);
+			GLine line_10 = new GLine(x * World.BLOCK_SIZE, y
+					* World.BLOCK_SIZE + World.BLOCK_SIZE, x * World.BLOCK_SIZE
+					+ World.BLOCK_SIZE, y * World.BLOCK_SIZE + World.BLOCK_SIZE);
 			line_10.setColor(line_color);
 			block.add(line_10);
 		}
-		GLine line_07 = new GLine(x * World.BLOCK_SIZE + World.BLOCK_SIZE * k2,
+		GLine line_07 = new GLine(
+				x * World.BLOCK_SIZE + World.BLOCK_SIZE * k2,
 				y * World.BLOCK_SIZE + World.BLOCK_SIZE - World.BLOCK_SIZE * k2,
-				x * World.BLOCK_SIZE + World.BLOCK_SIZE * k2, y * World.BLOCK_SIZE + World.BLOCK_SIZE);
+				x * World.BLOCK_SIZE + World.BLOCK_SIZE * k2, y
+						* World.BLOCK_SIZE + World.BLOCK_SIZE);
 		line_07.setColor(line_color);
 		block.add(line_07);
-		GLine line_08 = new GLine(x * World.BLOCK_SIZE + World.BLOCK_SIZE - World.BLOCK_SIZE * k2,
-				y * World.BLOCK_SIZE + World.BLOCK_SIZE - World.BLOCK_SIZE * k2,
-				x * World.BLOCK_SIZE + World.BLOCK_SIZE - World.BLOCK_SIZE * k2,
+		GLine line_08 = new GLine(x * World.BLOCK_SIZE + World.BLOCK_SIZE
+				- World.BLOCK_SIZE * k2, y * World.BLOCK_SIZE
+				+ World.BLOCK_SIZE - World.BLOCK_SIZE * k2, x
+				* World.BLOCK_SIZE + World.BLOCK_SIZE - World.BLOCK_SIZE * k2,
 				y * World.BLOCK_SIZE + World.BLOCK_SIZE);
 		line_08.setColor(line_color);
 		block.add(line_08);
 
 		// LEFT
 		if (!left) {
-			GLine line_11 = new GLine(x * World.BLOCK_SIZE, y * World.BLOCK_SIZE, x * World.BLOCK_SIZE,
-					y * World.BLOCK_SIZE + World.BLOCK_SIZE);
+			GLine line_11 = new GLine(x * World.BLOCK_SIZE, y
+					* World.BLOCK_SIZE, x * World.BLOCK_SIZE, y
+					* World.BLOCK_SIZE + World.BLOCK_SIZE);
 			line_11.setColor(line_color);
 			block.add(line_11);
 		}
-		GLine line_01 = new GLine(x * World.BLOCK_SIZE, y * World.BLOCK_SIZE + World.BLOCK_SIZE * k2,
-				x * World.BLOCK_SIZE + World.BLOCK_SIZE * k2, y * World.BLOCK_SIZE + World.BLOCK_SIZE * k2);
+		GLine line_01 = new GLine(x * World.BLOCK_SIZE, y * World.BLOCK_SIZE
+				+ World.BLOCK_SIZE * k2, x * World.BLOCK_SIZE
+				+ World.BLOCK_SIZE * k2, y * World.BLOCK_SIZE
+				+ World.BLOCK_SIZE * k2);
 		line_01.setColor(line_color);
 		block.add(line_01);
-		GLine line_02 = new GLine(x * World.BLOCK_SIZE, y * World.BLOCK_SIZE + World.BLOCK_SIZE - World.BLOCK_SIZE * k2,
-				x * World.BLOCK_SIZE + World.BLOCK_SIZE * k2,
-				y * World.BLOCK_SIZE + World.BLOCK_SIZE - World.BLOCK_SIZE * k2);
+		GLine line_02 = new GLine(x * World.BLOCK_SIZE, y * World.BLOCK_SIZE
+				+ World.BLOCK_SIZE - World.BLOCK_SIZE * k2, x
+				* World.BLOCK_SIZE + World.BLOCK_SIZE * k2, y
+				* World.BLOCK_SIZE + World.BLOCK_SIZE - World.BLOCK_SIZE * k2);
 		line_02.setColor(line_color);
 		block.add(line_02);
 		return block;
